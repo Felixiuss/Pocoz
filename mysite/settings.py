@@ -120,3 +120,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Отправка почты https://pocoz.gitbooks.io/django-v-primerah/content/glava-2-uluchshenie-bloga-s-pomoshyu-rasshirennyh
+# -vozmozhnostej/otpravka-postov-na-e-mail/otpravka-e-mail-v-django.html
+EMAIL_HOST = 'vm109517.keyweb.ru'
+EMAIL_HOST_USER = 'r.boyko@standart.ua'  # добавить функцию для вызова email конкретного пользователя
+EMAIL_HOST_PASSWORD = '9&w3H@YgsCk9'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
