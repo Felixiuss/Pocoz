@@ -32,13 +32,14 @@ class PostListView(ListView):
 
 
 def post_detail(request, year, month, day, post):
-    """Конкретный пост + комментарии"""
+    """Конкретный пост + добавление комментариев"""
     post = get_object_or_404(Post, slug=post, status='published',
                              publish__year=year,
                              publish__month=month,
                              publish__day=day)
     # List of active comments for this post
     comments = post.comments.filter(active=True)
+    added_comment = False
 
     if request.method == 'POST':
         # A comment was posted
@@ -50,11 +51,18 @@ def post_detail(request, year, month, day, post):
             new_comment.post = post
             # Save the comment to the database
             new_comment.save()  # метод save доступен только для ModelForm, а не для Form
+            added_comment = True
     else:
         comment_form = CommentForm()
     return render(request, 'blog/post/detail.html', {'post': post,
                                                      'comments': comments,
-                                                     'comment_form': comment_form})
+                                                     'comment_form': comment_form,
+                                                     'added_comment': added_comment})
+
+
+# TODO разобраться с ошибкой new_comment
+#  https://pocoz.gitbooks.io/django-v-primerah/content/glava-2-uluchshenie-bloga-s-pomoshyu-rasshirennyh
+#  -vozmozhnostej/sozdanie-sistemy-kommentariev/dobavlenie-kommentariev-v-shablon-post-detail.html
 
 
 def post_share(request, post_id):

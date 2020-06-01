@@ -6,7 +6,40 @@
         Published {{ post.publish }} by {{ post.author }}
     </p>
 {{ post.body|linebreaks }}
+
+{#    Поделитьcя по email #}
 <p>
     <a href="{% url "post_share" post.id %}">Share this post</a>
 </p>
+
+{#    Комментарии #}
+{% with comments.count as total_comments %}  {# присвоить значение новой переменной  #}
+    <h2>
+        {{ total_comments }} comment{{ total_comments|pluralize }}  {# добавляет букву 's' если total_comments != 1 #}
+    </h2>
+{% endwith %}
+{% for comment in comments %}
+    <div class="comment">
+        <p class="info">
+            {# содержит счетчик циклов в каждой итерации #}
+            Comment {{ forloop.counter }} by {{ comment.name }} {{ comment.created }}
+        </p>
+        {{ comment.body|linebreaks }}
+    </div>
+{% empty %}  {# Отображается сообщение по умолчанию, если список комментариев пуст #}
+    <p>There are no comments yet.</p>
+{% endfor %}
+
+{#    сообщение об успехе, если форма успешно отправлена#}
+{% if added_comment %}
+    <h2>Your comment has been added.</h2>
+{% else %}
+    <h2>Add a new comment</h2>
+    <form action="." method="post">
+        {{ comment_form.as_p }}
+        {% csrf_token %}
+        <p><input type="submit" value="Add comment"></p>
+    </form>
+
+{% endif %}
 {% endblock %}
