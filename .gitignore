@@ -6,4 +6,5 @@ mysite/__pycache__
  __pycache__/
 blog/migrations/0002_comment.py
 blog/migrations/__pycache__/0002_comment.cpython-38.pyc
+requarements
 

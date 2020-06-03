@@ -1,4 +1,5 @@
 from django.core.mail import send_mail
+from django.db.models import Count
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView
 
@@ -20,12 +21,11 @@ def post_list(request, tag_slug=None):
     """Представление на основе функции"""
     object_list = Post.objects.all()
     tag = None
-
     # если в строке запроса есть tag/... - выводим список только тех постов в которых есть данный тег
     if tag_slug:
         tag = get_object_or_404(Tag, slug=tag_slug)
         object_list = object_list.filter(tags__in=[tag])
-
+    # Пагинация
     paginator = Paginator(object_list, 3)  # 3 posts in each page
     page = request.GET.get('page')  # запрос номера страници
     try:
@@ -36,9 +36,11 @@ def post_list(request, tag_slug=None):
     except EmptyPage:
         # If page is out of range deliver last page of results
         posts = paginator.page(paginator.num_pages)
+
     return render(request, 'blog/post/list.html', {'page': page,
                                                    'posts': posts,
-                                                   'tag': tag})
+                                                   'tag': tag
+                                                   })
 
 
 def post_detail(request, year, month, day, post):
@@ -64,10 +66,20 @@ def post_detail(request, year, month, day, post):
             added_comment = True
     else:
         comment_form = CommentForm()
+    # List of similar posts
+    # https://pocoz.gitbooks.io/django-v-primerah/content/glava-2-uluchshenie-bloga-s-pomoshyu-rasshirennyh-vozmozhnostej/poluchenie-zapisej-po-shodstvu.html
+    post_tags_ids = post.tags.values_list('id', flat=True)  # список id тего данного поста
+    similar_posts = Post.objects.filter(tags__in=post_tags_ids).exclude(id=post.id)  # отбор потов с такими же тегами
+    similar_posts = similar_posts.annotate(same_tags=Count('tags')).order_by('-same_tags', '-publish')[:4]
+    print(similar_posts)
+    print(similar_posts.annotate(same_tags=Count('tags')))
+    print(Count('tags'))
     return render(request, 'blog/post/detail.html', {'post': post,
                                                      'comments': comments,
                                                      'comment_form': comment_form,
-                                                     'added_comment': added_comment})
+                                                     'added_comment': added_comment,
+                                                     'similar_posts': similar_posts
+                                                     })
 
 
 # TODO разобраться с ошибкой new_comment
@@ -95,4 +107,5 @@ def post_share(request, post_id):
         form = EmailPostForm()
     return render(request, 'blog/post/share.html', {'post': post,
                                                     'form': form,
-                                                    'sent': sent})
+                                                    'sent': sent
+                                                    })
