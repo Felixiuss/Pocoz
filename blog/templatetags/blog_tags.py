@@ -1,5 +1,7 @@
+import markdown
 from django import template
 from django.db.models import Count
+from django.utils.safestring import mark_safe
 
 from ..models import Post
 
@@ -30,3 +32,7 @@ def get_most_commented_posts(count=5):
 # Создание тегов шаблонизатора Django :
 # https://pocoz.gitbooks.io/django-v-primerah/content/rasshirenie-prilozheniya-blog/sozdanie-kastomizirovannyh-shablonov-tegov-i-filtrov/sozdanie-tegov-shablonizatora-django.html
 # Django документация - https://docs.djangoproject.com/en/3.0/howto/custom-template-tags/
+
+@register.filter(name='markdown')
+def markdown_format(text):
+    return mark_safe(markdown.markdown(text))
