@@ -19,7 +19,7 @@ class PostListView(ListView):
 
 def post_list(request, tag_slug=None):
     """Представление на основе функции"""
-    object_list = Post.objects.all()
+    object_list = Post.objects.filter(status='published')
     tag = None
     # если в строке запроса есть tag/... - выводим список только тех постов в которых есть данный тег
     if tag_slug:
@@ -68,12 +68,13 @@ def post_detail(request, year, month, day, post):
         comment_form = CommentForm()
     # List of similar posts
     # https://pocoz.gitbooks.io/django-v-primerah/content/glava-2-uluchshenie-bloga-s-pomoshyu-rasshirennyh-vozmozhnostej/poluchenie-zapisej-po-shodstvu.html
-    post_tags_ids = post.tags.values_list('id', flat=True)  # список id тего данного поста
+    post_tags_ids = post.tags.values_list('id', flat=True)  # извлекаем список id тегов которые есть у данного поста
+    # TODO отфильтровать pablished
     similar_posts = Post.objects.filter(tags__in=post_tags_ids).exclude(id=post.id)  # отбор потов с такими же тегами
     similar_posts = similar_posts.annotate(same_tags=Count('tags')).order_by('-same_tags', '-publish')[:4]
-    print(similar_posts)
-    print(similar_posts.annotate(same_tags=Count('tags')))
-    print(Count('tags'))
+    # print(similar_posts)
+    # print(similar_posts.annotate(same_tags=Count('tags')))
+    # print(Count('tags'))
     return render(request, 'blog/post/detail.html', {'post': post,
                                                      'comments': comments,
                                                      'comment_form': comment_form,
