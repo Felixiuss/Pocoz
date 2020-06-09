@@ -15,6 +15,7 @@
     <h2>My blog</h2>
     <p>This is my blog. I've written {% total_posts %} posts so far.</p>  {# total_posts кастомный тег из blog_tags.py #}
     <p>p.s: написан с помощью кастомного тега - total_posts() в blog/tamplatetags/blog_tags.py</p>
+    <p><a href="{% url "post_feed" %}">Subscribe to my RSS feed</a></p>  {# ссылка для подписки на новостной канал #}
 
     <h3>Latest posts</h3>
     <p>написан с помощью кастомного тега - show_latest_posts(count=5) в blog/tamplatetags/blog_tags.py</p>
