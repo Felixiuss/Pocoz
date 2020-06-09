@@ -28,8 +28,8 @@
         <p class="date">
             Published {{ post.publish }} by {{ post.author }}
         </p>
-{#        {{ post.body|truncatewords:30|linebreaks }}#}  {# первый вариант #}
-        {{ post.body|markdown|truncatewords_html:30 }}  {# использование кастомного тега фильтра из модуля markdoun в blogs_tags.py#}
+        {{ post.body|truncatewords:30|linebreaks }}  {# первый вариант #}
+{#        {{ post.body|markdown|truncatewords_html:30 }}  {# использование кастомного тега фильтра из модуля markdown в blogs_tags.py#}
     {% endfor %}
 
     {% include "blog/pagination.html" with page=posts %}

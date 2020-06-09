@@ -30,6 +30,8 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+SITE_ID = 1
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -37,6 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'django.contrib.sites',  # позволяет связать объекты с конкретными сайтами, работающими с проектом
+    'django.contrib.sitemaps',  # фреймворк - который позволяет динамически создавать карту сайта С помощью sitemap
+    # вы будете помогать поисковым роботам индексировать содержимое сайта
+
     'blog',
     'taggit'
 ]
