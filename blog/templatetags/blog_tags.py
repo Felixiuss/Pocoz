@@ -15,7 +15,7 @@ def total_posts():
     return Post.objects.filter(status='published').count()
 
 
-# inclusion_tag: обрабатывает данные и возвращает обработанный шаблон
+# inclusion_tag: обрабатывает данные и возвращает обработанный шаблон (умеет рендерить шаблон)
 @register.inclusion_tag('blog/post/latest_posts.html')
 def show_latest_posts(count=5):
     # возвращает словарь последних опубликованных постов (по умолчанию 5) в виде ссылок на шаблон latest_post.html
